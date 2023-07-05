@@ -152,3 +152,151 @@ class Solution:
                 temp2[i] = temp.pop()
 
         return ''.join(temp2)
+
+"""
+Question 6:
+Given an input string s, reverse the order of the words.
+A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
+Return a string of the words in reverse order concatenated by a single space.
+Note that s may contain leading or trailing spaces or multiple spaces between two words. The returned string should only
+have a single space separating the words. Do not include any extra spaces.
+"""
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        temp = s.split()
+        st = ''
+        for i in range(len(temp)-1,-1,-1):
+            if temp[i] != ' ':
+                st = st + temp[i]
+            if i != 0:
+                st = st + ' '
+
+        return st
+
+"""
+Question 7:
+(Intuition: Calculate the pre and postfix of the number and then do the calculation)
+Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of 
+nums except nums[i]. The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+You must write an algorithm that runs in O(n) time and without using the division operation.
+"""
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        size = len(nums)
+        output = [0] * size
+        pre = 1
+        post = 1
+        for i in range(size):
+            if i == 0:
+                output[i] = 1
+            else:
+                output[i] = nums[i - 1] * pre
+
+            pre = output[i]
+
+        for i in range(size - 1, -1, -1):
+            if i == size - 1:
+                post = 1
+            else:
+                post = nums[i + 1] * post
+                output[i] = post * output[i]
+
+        return output
+
+"""
+Question 8:
+Increasing Triplet Subsequence:
+Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that 
+i < j < k and nums[i] < nums[j] < nums[k]. If no such indices exists, return false.
+"""
+# Brute Force:O(n3)
+class Solution:
+    def increasingTriplet(self, nums: List[int]) -> bool:
+        for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                if nums[j] > nums[i]:
+                    for k in range(j+1,len(nums)):
+                        if nums[k] > nums[j]:
+                            return True
+
+        return False
+
+# O(n) Solution:
+class Solution:
+    def increasingTriplet(self, nums: List[int]) -> bool:
+        num_size = len(nums)
+        if num_size < 3:
+            return False
+
+        left = sys.maxsize
+        mid = sys.maxsize
+
+        for i in range(num_size):
+            if nums[i] > mid:
+                return True
+            elif nums[i] < left:
+                left = nums[i]
+            elif nums[i] < mid and nums[i] > left:
+                mid = nums[i]
+
+        return False
+
+
+"""
+Question 9 : (String Comparison)
+Given an array of characters chars, compress it using the following algorithm:
+Begin with an empty string s. For each group of consecutive repeating characters in chars:
+If the group's length is 1, append the character to s.
+Otherwise, append the character followed by the group's length.
+The compressed string s should not be returned separately, but instead, be stored in the input character array chars. 
+Note that group lengths that are 10 or longer will be split into multiple characters in chars.
+After you are done modifying the input array, return the new length of the array.
+You must write an algorithm that uses only constant extra space.
+
+Intuition: calculate the group one by one using while if the counter > 1 then again separate it and add to the chars
+"""
+
+class Solution:
+    def compress(self, chars: List[str]) -> int:
+        ans = 0
+        char_size = len(chars)
+        if char_size == 1:
+            return 1
+
+        i = 0
+        while (i < char_size):
+            j = i + 1
+            while (j < char_size and chars[j] == chars[i]):
+                j = j + 1
+
+            count = j - i
+            chars[ans] = chars[i]
+            ans += 1
+
+            if count > 1:
+                char_arr = list(str(count))
+                for char in char_arr:
+                    chars[ans] = char
+                    ans += 1
+
+            i = j
+
+        return ans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
