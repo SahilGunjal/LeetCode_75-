@@ -283,7 +283,57 @@ class Solution:
 
         return ans
 
+"""
+----------------------------------  TWO POINTERS ---------------------------------- 
+"""
 
+"""
+Question 10:(Move zeros)
+Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements
+Note that you must do this in-place without making a copy of the array.
+"""
+
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        ind = 0
+        size = len(nums)
+        for i in range(size):
+            if nums[i] != 0:
+                nums[i], nums[ind] = nums[ind], nums[i]
+                ind += 1
+
+
+"""
+Question 11: (Is Subsequence)
+Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the 
+characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of 
+"abcde" while "aec" is not).
+"""
+
+class Solution:
+    def isSubsequence(self, s: str, t: str) -> bool:
+        s_ptr = 0
+        size_t = len(t)
+        size_s = len(s)
+        if size_s == 0:
+            return True
+
+        for i in range(size_t):
+            if s[s_ptr] == t[i]:
+                s_ptr += 1
+
+            if s_ptr == size_s:
+                return True
+
+        return False
+
+
+"""
+"""
 
 
 
