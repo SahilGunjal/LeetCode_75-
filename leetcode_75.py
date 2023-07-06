@@ -4,7 +4,9 @@
 # Note: Anyone can see and get the codes from this file. It's completely free and do share your best solutions if you
 #       find any. Motive of this is to contribute to the community and enhance the learning opportunity for everyone.
 
-
+"""
+----------------------------------  Array and Strings  ----------------------------------
+"""
 """
 Question 1:
 You are given two strings word1 and word2. Merge the strings by adding letters in alternating order, starting with
@@ -333,7 +335,94 @@ class Solution:
 
 
 """
+Question 12: (Container with most water)
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the 
+ith line are (i, 0) and (i, height[i]). Find two lines that together with the x-axis form a container, such that the 
+container contains the most water.Return the maximum amount of water a container can store.
+Notice that you may not slant the container.
+Intuition: Brute force need O(n2) but using 2 ptr it is ~ O(n). Move ptr with small height and calculate the capacity.
 """
+
+class Solution:
+    def calculate_capacity(self, f, l, arr):
+        x_diff = l - f
+        y_diff = min(arr[f], arr[l])
+
+        return x_diff * y_diff
+
+    def maxArea(self, height: List[int]) -> int:
+        arr_size = len(height)
+        f_ptr = 0
+        l_ptr = arr_size - 1
+        max_capacity = float('-inf')
+        while f_ptr < l_ptr:
+            curr_capacity = self.calculate_capacity(f_ptr, l_ptr, height)
+            if curr_capacity > max_capacity:
+                max_capacity = curr_capacity
+
+            if height[f_ptr] <= height[l_ptr]:
+                f_ptr += 1
+            else:
+                l_ptr -= 1
+
+        return max_capacity
+
+
+"""
+Question 13: (Max Number of K-Sum Pairs)
+You are given an integer array nums and an integer k.
+In one operation, you can pick two numbers from the array whose sum equals k and remove them from the array.
+Return the maximum number of operations you can perform on the array.
+Intuition: Can be done in O(n2) using brute force, better way can be done using sorting the array and then using 2 ptrs
+O(nlogn). But using Counter --> hashmap , can be done using O(N) = Best Soltion ans = ans + min(h_map[item],h_map[k-item])
+and then final ans//2, as it counts the items twice.
+"""
+
+class Solution:
+    def maxOperations(self, nums: List[int], k: int) -> int:
+        h_map = Counter(nums)
+        max_count = 0
+        for items in h_map:
+            max_count += min(h_map[items], h_map[k - items])
+
+        return max_count // 2
+
+
+"""
+----------------------------------  Sliding Window  ----------------------------------
+"""
+
+"""
+Question 14: Maximum Average Subarray I
+You are given an integer array nums consisting of n elements, and an integer k.
+Find a contiguous subarray whose length is equal to k that has the maximum average value and return this value. 
+Any answer with a calculation error less than 10-5 will be accepted.
+
+Intuition: Can be done in O(nk) in brute force way but it is a problem of fix size window (sliding window) here we have 
+given arr, find subarray, avg and given window size as well = k. So can be solved in O(n) using sliding window. 
+"""
+
+class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -> float:
+        max_avg = float('-inf')
+        num_size = len(nums)
+        initial_sum = 0
+        for i in range(k):
+            initial_sum += nums[i]
+
+        if initial_sum / k > max_avg:
+            max_avg = initial_sum / k
+
+        for i in range(k, num_size):
+            initial_sum = initial_sum + nums[i] - nums[i - k]
+            if initial_sum / k > max_avg:
+                max_avg = initial_sum / k
+
+        return max_avg
+
+
+
+
 
 
 
