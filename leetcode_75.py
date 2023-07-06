@@ -400,8 +400,9 @@ Any answer with a calculation error less than 10-5 will be accepted.
 
 Intuition: Can be done in O(nk) in brute force way but it is a problem of fix size window (sliding window) here we have 
 given arr, find subarray, avg and given window size as well = k. So can be solved in O(n) using sliding window. 
-"""
 
+Note: If you are using something repeatedly then it can be optimized. So look for such cases.  
+"""
 class Solution:
     def findMaxAverage(self, nums: List[int], k: int) -> float:
         max_avg = float('-inf')
