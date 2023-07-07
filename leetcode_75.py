@@ -423,6 +423,82 @@ class Solution:
         return max_avg
 
 
+"""
+Question 15: Maximum Number of Vowels in a Substring of Given Length
+Given a string s and an integer k, return the maximum number of vowel letters in any substring of s with length k.
+Vowel letters in English are 'a', 'e', 'i', 'o', and 'u'.
+Intuition : Again it is a classic problem of sliding window here we can see need to find the substring, k is given.
+Keep the window of size 3 and move and update max_vowel  
+"""
+
+class Solution:
+    def maxVowels(self, s: str, k: int) -> int:
+        s_size = len(s)
+        max_vowel = 0
+        temp = 0
+        for i in range(k):
+            if s[i] == 'a' or s[i] == 'e' or s[i] == 'i' or s[i] == 'o' or s[i] == 'u':
+                temp += 1
+
+        if temp > max_vowel:
+            max_vowel = temp
+
+        for i in range(k, s_size):
+            if s[i - k] == 'a' or s[i - k] == 'e' or s[i - k] == 'i' or s[i - k] == 'o' or s[i - k] == 'u':
+                temp -= 1
+
+            if s[i] == 'a' or s[i] == 'e' or s[i] == 'i' or s[i] == 'o' or s[i] == 'u':
+                temp += 1
+
+            if temp > max_vowel:
+                max_vowel = temp
+
+        return max_vowel
+
+
+"""
+Question 16: Max Consecutive Ones III
+Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can 
+flip at most k 0's.
+Intuition : This one is tricky sliding window problem, here we have not given any fix size of a window. As per the 
+condition we have to move the sliding window. We use 2 pointers here to manage this. (we kept number of 0's <= k
+"""
+
+class Solution:
+    def longestOnes(self, nums: List[int], k: int) -> int:
+        i = 0
+        j = 0
+        nums_size = len(nums)
+        long_ones = 0
+        k_count = 0
+        while j < nums_size:
+            if nums[j] == 0:
+                k_count += 1
+
+            if k_count > k:
+                while k_count > k:
+                    if nums[i] == 0:
+                        k_count -= 1
+
+                    i += 1
+
+            if j - i + 1 > long_ones:
+                long_ones = j - i + 1
+
+            j += 1
+
+        return long_ones
+
+"""
+Practice Problem of Sliding window: (Not in 75 Questions) : gfg: Longest Sub-Array with Sum K
+Given an array containing N integers and an integer K., Your task is to find the length of the longest Sub-Array with 
+the sum of the elements equal to the given value K. 
+"""
+
+
+
+
+
 
 
 
