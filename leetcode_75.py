@@ -492,10 +492,70 @@ class Solution:
 """
 Practice Problem of Sliding window: (Not in 75 Questions) : gfg: Longest Sub-Array with Sum K
 Given an array containing N integers and an integer K., Your task is to find the length of the longest Sub-Array with 
-the sum of the elements equal to the given value K. 
+the sum of the elements equal to the given value K. (Only Positive)
 """
 
+class Solution:
+    def lenOfLongSubarr(self, arr, n, k):
+        # Complete the function
 
+        i = 0
+        j = 0
+        sum = 0
+        long_subarr = 0
+        arr_size = len(arr)
+        while (j < arr_size):
+            sum += arr[j]
+
+            if sum < k:
+                j += 1
+
+            elif sum == k:
+                if j - i + 1 > long_subarr:
+                    long_subarr = j - i + 1
+
+                j += 1
+
+            elif sum > k:
+                while sum > k:
+                    if arr[i] < 0:
+                        sum += arr[i]
+                    else:
+                        sum -= arr[i]
+
+                    i += 1
+
+                j += 1
+
+        return long_subarr
+
+
+"""
+If we have both positive and negative numbers and as well as zeros:
+(solved using reverse engineering 
+"""
+class Solution:
+    def lenOfLongSubarr(self, arr, n, k):
+        # Complete the function
+        long_sum = 0
+        dic = dict()
+        sum = 0
+        arr_size = len(arr)
+        for i in range(arr_size):
+            sum += arr[i]
+
+            if sum == k:
+                long_sum = max(long_sum, i + 1)
+
+            rem = sum - k
+
+            if rem in dic:
+                long_sum = max(long_sum, i - dic[rem])
+
+            if sum not in dic:
+                dic[sum] = i
+
+        return long_sum
 
 
 
