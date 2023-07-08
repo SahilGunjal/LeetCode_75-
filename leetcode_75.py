@@ -557,12 +557,122 @@ class Solution:
 
         return long_sum
 
+"""
+Question 17: Longest Subarray of 1's After Deleting One Element
+Given a binary array nums, you should delete one element from it.
+Return the size of the longest non-empty subarray containing only 1's in the resulting array. Return 0 if there is no 
+such subarray.
+Intuition: It is again a sliding window problem and here we can maintain 2 pointers and i and j and same as the previous 
+consecutive ones we can maintain k not greater than 1 as only 1 element must be there. if 1101011 is an example then j 
+goes till the 4 and then again reduce k by moving i till k==1. then I will be at 3 and k = 1 and j=5. and calculate the
+long_subarray each step. So output of this case will be 3.===> either i=0 and j = 4 (4-0-1) or i=3 and j = 6 but j==7
+at the end of loop and (7-3-1) = 3  
+"""
+
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        i = 0
+        j = 0
+        nums_size = len(nums)
+        long_sub = 0
+        k = 0
+        while (j < nums_size):
+            if nums[j] == 0:
+                k += 1
+
+                if k > 1 and nums[j] == 0:
+                    long_sub = max(long_sub, j - i - 1)
+
+                    while (k > 1):
+                        if nums[i] == 0:
+                            k -= 1
+
+                        i = i + 1
+
+            j += 1
+
+        long_sub = max(long_sub, j - i - 1)
+
+        return long_sub
 
 
+"""
+----------------------------------  Prefix Sum  ----------------------------------
+"""
+
+"""
+Question 18: 1732. Find the Highest Altitude
+There is a biker going on a road trip. The road trip consists of n + 1 points at different altitudes. The biker starts 
+his trip on point 0 with altitude equal 0. You are given an integer array gain of length n where gain[i] is the net gain
+ n altitude between points i and i + 1 for all (0 <= i < n). Return the highest altitude of a point.
+Intuition: Very simple, just see at by adding each point whether highest altitude increases. consider Y axis and keep 
+adding and checking. 
+"""
+class Solution:
+    def largestAltitude(self, gain: List[int]) -> int:
+        highest_altitude = 0
+        temp_alti = 0
+        total_points = len(gain)
+        for i in range(total_points):
+            temp_alti += gain[i]
+            highest_altitude = max(highest_altitude, temp_alti)
+
+        return highest_altitude
 
 
+"""
+Question 19:  Find Pivot Index
+Given an array of integers nums, calculate the pivot index of this array.
+The pivot index is the index where the sum of all the numbers strictly to the left of the index is equal to the sum of 
+all the numbers strictly to the index's right. If the index is on the left edge of the array, then the left sum is 0 
+because there are no elements to the left. This also applies to the right edge of the array. Return the leftmost pivot 
+index. If no such index exists, return -1.
+Intuition: 
+approach: o(n): space o(2n): time : store sum in array
+Best: o(1): space o(2n): time : maintain left_sum and right_sum pointers
+"""
+
+# Approach:
+class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        my_sum_arr = []
+        sum = 0
+        for i in range(len(nums)):
+            sum = sum + nums[i]
+            my_sum_arr.append(sum)
+
+        if my_sum_arr[len(nums) - 1] - nums[0] == 0:
+            return 0
+
+        for i in range(1, len(my_sum_arr)):
+            temp2 = my_sum_arr[len(nums) - 1] - my_sum_arr[i]
+
+            if my_sum_arr[i - 1] == temp2:
+                return i
+
+        return -1
+
+# Best Solution:
+
+class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        lsum = 0
+        rsum = sum(nums)
+
+        for i in range(len(nums)):
+            rsum = rsum - nums[i]
+
+            if lsum == rsum:
+                return i
+
+            lsum = lsum + nums[i]
+
+        return -1
 
 
+"""
+
+"""
 
 
 
