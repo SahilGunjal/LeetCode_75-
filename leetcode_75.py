@@ -670,20 +670,124 @@ class Solution:
         return -1
 
 
+
+"""
+----------------------------------  Prefix Sum  ----------------------------------
 """
 
 """
+Question 20: 2215. Find the Difference of Two Arrays
+Given two 0-indexed integer arrays nums1 and nums2, return a list answer of size 2 where:
+answer[0] is a list of all distinct integers in nums1 which are not present in nums2.
+answer[1] is a list of all distinct integers in nums2 which are not present in nums1.
+Note that the integers in the lists may be returned in any order.
+
+Intuition: put the nums in 2 sets(hash) and check whether that element is in other set or not
+"""
+
+class Solution:
+    def findDifference(self, nums1: List[int], nums2: List[int]) -> List[List[int]]:
+        s1 = set(nums1)
+        s2 = set(nums2)
+        ans = [[] for _ in range(2)]
+        for num in s1:
+            if num not in s2:
+                ans[0].append(num)
+
+        for num in s2:
+            if num not in s1:
+                ans[1].append(num)
+
+        return ans
+
+"""
+question 21: Unique Number of Occurrences
+Given an array of integers arr, return true if the number of occurrences of each value in the array is unique or false 
+otherwise.
+2 approaches: 1. With more time complexity
+"""
+# Naive
+class Solution:
+    def uniqueOccurrences(self, arr: List[int]) -> bool:
+        num_count = set()
+
+        for num in arr:
+            num_count.add(arr.count(num))
+
+        if len(num_count) == len(set(arr)):
+            return True
+
+        else:
+            return False
 
 
+# Optimized
+
+class Solution:
+    def uniqueOccurrences(self, arr: List[int]) -> bool:
+        count_dict = dict()
+
+        for num in arr:
+            if num not in count_dict:
+                count_dict[num] = 1
+
+            else:
+                count_dict[num] += 1
+
+        if len(set(count_dict.values())) == len(set(arr)):
+            return True
+
+        else:
+            return False
 
 
+"""
+question 22: Determine if Two Strings Are Close
+Two strings are considered close if you can attain one from the other using the following operations:
 
+Operation 1: Swap any two existing characters.
+For example, abcde -> aecdb
+Operation 2: Transform every occurrence of one existing character into another existing character, 
+and do the same with the other character.
+For example, aacabb -> bbcbaa (all a's turn into b's, and all b's turn into a's)
+You can use the operations on either string as many times as necessary.
+Given two strings, word1 and word2, return true if word1 and word2 are close, and false otherwise.
+Intuition: We need same characters in both the words + and their number of count of characters must be same in both
+the cases not necessarily count of same characters. 
+"""
 
+class Solution:
+    def closeStrings(self, word1: str, word2: str) -> bool:
+        if len(word1) != len(word2):
+            return False
 
+        first_dict = dict()
+        second_dict = dict()
 
+        for char in word1:
+            if char not in first_dict:
+                first_dict[char] = 1
 
+            else:
+                first_dict[char] += 1
 
+        for char in word2:
+            if char not in second_dict:
+                second_dict[char] = 1
 
+            else:
+                second_dict[char] += 1
+
+        if set(word1) == set(word2) and set(first_dict.values()) == set(second_dict.values()):
+            x = list(first_dict.values())
+            y = list(second_dict.values())
+            x.sort()
+            y.sort()
+            if x == y:
+                return True
+
+        else:
+            return False
 
 
 
