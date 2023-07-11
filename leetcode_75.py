@@ -672,7 +672,7 @@ class Solution:
 
 
 """
-----------------------------------  Prefix Sum  ----------------------------------
+----------------------------------  Hashmap  ----------------------------------
 """
 
 """
@@ -789,5 +789,39 @@ class Solution:
         else:
             return False
 
+
+"""
+Question 23: 2352. Equal Row and Column Pairs
+Given a 0-indexed n x n integer matrix grid, return the number of pairs (ri, cj) such that row ri and column cj are equal.
+A row and column pair is considered equal if they contain the same elements in the same order (i.e., an equal array).
+
+Intuition: Here we can use logic of transpose and hashtable, store the row as string key in hashtable and then check if 
+transpose of column is in dictionary/ hashtable if yes increase the counter. 
+"""
+
+class Solution:
+    def equalPairs(self, grid: List[List[int]]) -> int:
+        n = len(grid[0])
+        trans_matrix_dict = dict()
+
+        for rows in grid:
+            temp_str = str(rows)
+            if temp_str in trans_matrix_dict:
+                trans_matrix_dict[temp_str] += 1
+
+            else:
+                trans_matrix_dict[temp_str] = 1
+
+        count = 0
+        for i in range(n):
+            temp = []
+            for j in range(n):
+                temp.append(grid[j][i])
+
+            temp_str = str(temp)
+            if temp_str in trans_matrix_dict:
+                count += trans_matrix_dict[temp_str]
+
+        return count
 
 
