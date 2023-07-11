@@ -825,3 +825,99 @@ class Solution:
         return count
 
 
+"""
+----------------------------------  Stack  ----------------------------------
+"""
+
+"""
+Question 24: Removing Stars From a String
+You are given a string s, which contains stars *.
+In one operation, you can:
+Choose a star in s.
+Remove the closest non-star character to its left, as well as remove the star itself.
+Return the string after all stars have been removed.
+
+Note:
+The input will be generated such that the operation is always possible.
+It can be shown that the resulting string will always be unique.
+
+Intuition: Naive + Better
+"""
+
+# Naive : Solve using just strings... time complexity : O(n) space: O(1)
+
+class Solution:
+    def removeStars(self, s: str) -> str:
+        final_string = ''
+        i = len(s) - 1
+        s_count = 0
+        while (i >= 0):
+            if s_count > 0:
+                if s[i] != '*':
+                    s_count -= 1
+                else:
+                    s_count += 1
+
+                i -= 1
+
+            elif s[i] == '*':
+                s_count += 1
+                i -= 1
+
+            elif s[i] != '*':
+                final_string += s[i]
+                i -= 1
+
+        return final_string[::-1]
+
+
+# Using Stack : Optimized time but used space complexity of O(n) = stack
+
+class Solution:
+    def removeStars(self, s: str) -> str:
+        final_ans = deque()
+        for char in s:
+            if char == '*':
+                final_ans.pop()
+            else:
+                final_ans.append(char)
+
+        return "".join(final_ans)
+
+
+"""
+Question 25: 735. Asteroid Collision
+We are given an array asteroids of integers representing asteroids in a row.
+For each asteroid, the absolute value represents its size, and the sign represents its direction (positive meaning right
+, negative meaning left). Each asteroid moves at the same speed.Find out the state of the asteroids after all collisions.
+If two asteroids meet, the smaller one will explode. If both are the same size, both will explode. 
+Two asteroids moving in the same direction will never meet.
+
+Tricky Question: Conditions are easy but we have to think in better way. Use while loop correctly and break the loop 
+whenever necessary.
+"""
+class Solution:
+    def asteroidCollision(self, asteroids: List[int]) -> List[int]:
+        final_asteroid = []
+
+        for astro in asteroids:
+
+            while len(final_asteroid) > 0 and final_asteroid[-1] > 0 and astro < 0:
+
+                if abs(astro) == final_asteroid[-1]:
+                    final_asteroid.pop()
+                    break
+
+                elif abs(astro) > final_asteroid[-1]:
+                    final_asteroid.pop()
+                    continue
+
+                elif abs(astro) < final_asteroid[-1]:
+                    break
+
+            else:
+                final_asteroid.append(astro)
+
+        return final_asteroid
+
+
