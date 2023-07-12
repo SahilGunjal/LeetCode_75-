@@ -920,4 +920,118 @@ class Solution:
 
         return final_asteroid
 
+"""
+Question 26: 394. Decode String
+Given an encoded string, return its decoded string.
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly 
+k times. Note that k is guaranteed to be a positive integer. You may assume that the input string is always valid; 
+there are no extra white spaces, square brackets are well-formed, etc. Furthermore, you may assume that the original 
+data does not contain any digits and that digits are only for those repeat numbers, k. For example, there will not be 
+input like 3a or 2[4].
+The test cases are generated so that the length of the output will never exceed 105.
+
+Intuition: Tricky Question, look for the all conditions, [, ] , digit, char, use proper condition which are required.
+It is leetcode medium question but not less than leetcode hard
+"""
+
+class Solution:
+    def decodeString(self, s: str) -> str:
+        str_stack = []
+        num_stack = []
+        num = 0
+        ans = ''
+        temp = ''
+
+        for char in s:
+            if char.isdigit():
+                num = num * 10 + int(char)
+
+            elif char == '[':
+                num_stack.append(num)
+                str_stack.append(ans)
+                ans = ''
+                num = 0
+
+            elif char == ']':
+                temp = ans
+                ans = str_stack.pop()
+                t_num = num_stack.pop()
+                while (t_num > 0):
+                    ans = ans + temp
+                    t_num -= 1
+
+            else:
+                ans += char
+
+        return ans
+
+"""
+----------------------------------  Queue  ----------------------------------
+"""
+
+"""
+Question 27: Number of Recent Calls
+You have a RecentCounter class which counts the number of recent requests within a certain time frame.
+
+Implement the RecentCounter class:
+RecentCounter() Initializes the counter with zero recent requests.
+int ping(int t) Adds a new request at time t, where t represents some time in milliseconds, and returns the number of 
+requests that has happened in the past 3000 milliseconds (including the new request). Specifically, return the number 
+of requests that have happened in the inclusive range [t - 3000, t].
+It is guaranteed that every call to ping uses a strictly larger value of t than the previous call.
+"""
+
+class RecentCounter:
+
+    def __init__(self):
+        self.que = deque()
+
+    def ping(self, t: int) -> int:
+        self.que.append(t)
+
+        start_time = t - 3000
+
+        while self.que[0] < start_time:
+            self.que.popleft()
+
+        return len(self.que)
+
+# Your RecentCounter object will be instantiated and called as such:
+# obj = RecentCounter()
+# param_1 = obj.ping(t)
+
+"""
+Question 28: Dota2 Senate
+
+Intuition: Use of 2 queues and add whatever is removing to the end as per the index of the R or D.
+"""
+
+
+class Solution:
+    def predictPartyVictory(self, senate: str) -> str:
+        senate = list(senate)
+        d_que = deque()
+        r_que = deque()
+
+        for i in range(len(senate)):
+            if senate[i] == 'D':
+                d_que.append(i)
+            else:
+                r_que.append(i)
+
+        while d_que and r_que:
+            if d_que[0] < r_que[0]:
+                d_que.append(d_que.popleft() + len(senate))
+                r_que.popleft()
+            else:
+                r_que.append(r_que.popleft() + len(senate))
+                d_que.popleft()
+
+        if len(d_que) != 0:
+            return 'Dire'
+        else:
+            return 'Radiant'
+
+
+
 
