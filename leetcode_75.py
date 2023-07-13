@@ -1032,6 +1032,200 @@ class Solution:
         else:
             return 'Radiant'
 
+"""
+----------------------------------  Linked-List  ----------------------------------
+"""
+
+"""
+Question 29: 2095: Delete the Middle Node of a Linked List
+Intuition: Good_Approach: count the total elements then go for deleting the middle element by index : time complexity: 
+O(n + n/2) 
+Better Approach: Maintain two pointers left and right : move right by 2 and left by 1 and once left reach the none, 
+slow is just before the middle skip it and return the head. time complexity: O(n/2)
+"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.
+#         next = next
+
+# GOOD Apporach
+class Solution:
+    def calculate_nodes(self, node):
+        count = 0
+        while node:
+            count += 1
+            node = node.next
+
+        return count
+
+    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        count = self.calculate_nodes(head)
+
+        if count == 1 or count == 0:
+            return None
+
+        remove_index = count // 2
+        i = 0
+        node = head
+        while i < remove_index - 1:
+            node = node.next
+            i += 1
+
+        node.next = node.next.next
+
+        return head
+
+
+# Best Approach: Here the catch is only that look for if initially there is just one element then we have to return None
+# depend on the where fast.next is None or fast.next.next is None we have to use prev and slow condition
+# if after loop fast.next is None means slow is on the middle so use prev, (odd)
+# else if fast.next.next is None means slow is before the middle so use slow (even)
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        fast = head
+        slow = head
+
+        if fast.next is None:
+            return None
+
+        while fast.next and fast.next.next:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
+
+        if fast.next is None:
+            prev.next = slow.next
+
+        else:
+            slow.next = slow.next.next
+
+        return head
+
+
+"""
+Question 30: 328. Odd Even Linked List
+Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even 
+indices, and return the reordered list. The first node is considered odd, and the second node is even, and so on.
+Note that the relative order inside both the even and odd groups should remain as it was in the input.
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.
+"""
+
+# Approach 1:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        odd_ptr = head
+        odd_head = odd_ptr
+        even_ptr = None
+
+        if odd_ptr is None:
+            return None
+
+        if odd_ptr.next is None:
+            return odd_head
+
+        if odd_ptr.next.next is None:
+            return odd_head
+
+        even_head = head.next
+
+        while odd_ptr.next and odd_ptr.next.next:
+            if even_ptr is None:
+                even_ptr = even_head
+            else:
+                even_ptr.next = even_ptr.next.next
+                even_ptr = even_ptr.next
+
+            odd_ptr.next = odd_ptr.next.next
+            odd_ptr = odd_ptr.next
+
+        if odd_ptr.next is None:
+            even_ptr.next = None
+        elif odd_ptr.next.next is None:
+            even_ptr.next = even_ptr.next.next
+
+        odd_ptr.next = even_head
+        return odd_head
+
+# Approach 2:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        odd_ptr = head
+        odd_head = odd_ptr
+        if odd_ptr is None:
+            return None
+        even_ptr = head.next
+        even_head = even_ptr
+        if even_ptr is None:
+            return odd_ptr
+
+        while odd_ptr.next and even_ptr.next:
+            odd_ptr.next = even_ptr.next
+            odd_ptr = odd_ptr.next
+
+            even_ptr.next = odd_ptr.next
+            even_ptr = even_ptr.next
+
+        odd_ptr.next = even_head
+
+        return odd_head
+
+"""
+Question 31: Reverse the LinkedList
+Approach 1:  using 3 pointers O(N) Time O(1) Space
+Approach 2: using another datastructure (stack or array) Time O(2n) and space O(n)
+"""
+
+# Approach 1 is best:
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr = head
+        while curr:
+            new = curr.next
+            curr.next = prev
+            prev = curr
+            curr = new
+
+        return prev
+
+"""
+Question 32: 2130:Maximum Twin Sum of a Linked List
+In a linked list of size n, where n is even, the ith node (0-indexed) of the linked list is known as the twin of the 
+(n-1-i)th node, if 0 <= i <= (n / 2) - 1. For example, if n = 4, then node 0 is the twin of node 3, and node 1 is the 
+twin of node 2. These are the only nodes with twins for n = 4. The twin sum is defined as the sum of a node and its twin.
+Given the head of a linked list with even length, return the maximum twin sum of the linked list.
+
+"""
+
+
+
+
 
 
 
