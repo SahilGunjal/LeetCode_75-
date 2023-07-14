@@ -1269,7 +1269,75 @@ class Solution:
 ----------------------------------  Binary-Tree-DFS  ----------------------------------
 """
 
+"""
+Question 33: 104. Maximum Depth of Binary Tree
+Given the root of a binary tree, return its maximum depth.
+A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf 
+node.
+"""
 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def calculateTheHeight(self,node):
+        if node is None:
+            return 0
+
+        leftHeight = self.calculateTheHeight(node.left)
+        rightHeight = self.calculateTheHeight(node.right)
+
+        return 1 + max(leftHeight,rightHeight)
+
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        return self.calculateTheHeig
+
+
+"""
+Question 34 : Leaf-Similar Trees
+Consider all the leaves of a binary tree, from left to right order, the values of those leaves form a leaf value 
+sequence.
+Intuition:  Traverse each tree find all leaf nodes and compare if same return True else return False
+TC: O(2N) and Space ~ O(2N) 
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findLeefNodes(self, node, l):
+        if node is None:
+            return
+        self.findLeefNodes(node.left, l)
+        self.findLeefNodes(node.right, l)
+
+        if node.left is None and node.right is None:
+            l.append(node.val)
+
+    def leafSimilar(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> bool:
+        l1 = []
+        l2 = []
+        self.findLeefNodes(root1, l1)
+        self.findLeefNodes(root2, l2)
+
+        if l1 == l2:
+            return True
+        else:
+            return False
+
+"""
+Question 35: 1448. Count Good Nodes in Binary Tree
+Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a 
+value greater than X.
+
+Return the number of good nodes in the binary tree.
+"""
 
 
 
