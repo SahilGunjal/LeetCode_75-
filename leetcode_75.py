@@ -1338,9 +1338,115 @@ value greater than X.
 
 Return the number of good nodes in the binary tree.
 """
+# My approach: Take a stack and do DFS and take list too, if element >= maxNode(i.e. stack[-1]) from root then append
+# stack and insert it in ans array as well. and when both left and right is checked properly then at end check if
+# the node is top element of stack if yes pop it and continue.
+
+# Time complexity: O(n) and space complexity : O(2n) : auxilary + stack ~ O(n)
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def traverseTree(self, node, stack, goodNodes):
+        if node is None:
+            return
+
+        if len(stack) == 0:
+            stack.append(node)
+            goodNodes.append(node.val)
+        elif stack[-1].val <= node.val:
+            stack.append(node)
+            goodNodes.append(node.val)
+
+        self.traverseTree(node.left, stack, goodNodes)
+        self.traverseTree(node.right, stack, goodNodes)
+
+        if node == stack[-1]:
+            stack.pop()
+
+    def goodNodes(self, root: TreeNode) -> int:
+        stack = deque()
+        goodNodes = []
+        self.traverseTree(root, stack, goodNodes)
+
+        return len(goodNodes)
 
 
+"""
+More Better Approach : Time complexity : O(N) and space Complexity - O(n) : Queue
+Approach: Go level by level put element in queue and with element put maximum value as well.
+"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def goodNodes(self, root: TreeNode) -> int:
+        totalGoodNodes = 0
+        que = deque()
+        que.append((root, float('-inf')))
 
+        while que:
+            currNode, maxVal = que.popleft()
 
+            if currNode.val >= maxVal:
+                totalGoodNodes += 1
+
+            if currNode.left:
+                que.append((currNode.left, max(maxVal, currNode.val)))
+
+            if currNode.right:
+                que.append((currNode.right, max(maxVal, currNode.val)))
+
+        return totalGoodNodes
+
+"""
+Question 36: 437. Path Sum III
+Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along 
+the path equals targetSum. The path does not need to start or end at the root or a leaf, but it must go downwards 
+(i.e., traveling only from parent nodes to child nodes). 
+
+Approach : Take the all elements in the array and once the left and right of the element is done check the sum if obtained
+then increase the counter and remove that node from the list. Repeat this and calculate the total paths.
+Time Complexity = O(nlogn) and space complexity is O(n)
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countPaths(self, node, count, nodeList, targetSum):
+        if node is None:
+            return
+
+        nodeList.append(node)
+
+        self.countPaths(node.left, count, nodeList, targetSum)
+        self.countPaths(node.right, count, nodeList, targetSum)
+
+        tempSum = 0
+        for i in range(len(nodeList) - 1, -1, -1):
+            tempSum += nodeList[i].val
+
+            if tempSum == targetSum:
+                count[0] += 1
+
+        nodeList.pop()
+
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
+        count = [0]
+        nodeList = []
+        self.countPaths(root, count, nodeList, targetSum)
+
+        return count[0]
 
 
