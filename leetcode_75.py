@@ -1539,3 +1539,38 @@ class Solution:
         p_status = False
         q_status = False
         return self.findLCA(root, p, q, p_status, q_status, finalLCA)
+
+"""
+Question 39:  199. Binary Tree Right Side View
+Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes 
+you can see ordered from top to bottom.
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        if root:
+            que = deque()
+            ansList = []
+            que.append(root)
+            while que:
+                que_size = len(que)
+                last_element = que[-1]
+                ansList.append(last_element.val)
+                for i in range(que_size):
+                    curr = que.popleft()
+
+                    if curr.left:
+                        que.append(curr.left)
+                    if curr.right:
+                        que.append(curr.right)
+
+            return ansList
+
+
+
