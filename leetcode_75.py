@@ -1572,5 +1572,44 @@ class Solution:
 
             return ansList
 
+"""
+Question 40: 1161. Maximum Level Sum of a Binary Tree
+Given the root of a binary tree, the level of its root is 1, the level of its children is 2, and so on.
+Return the smallest level x such that the sum of all the values of nodes at level x is maximal.
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def maxLevelSum(self, root: Optional[TreeNode]) -> int:
+        max_sum = float('-inf')
+        level = 0
+        que = deque()
+        que.append(root)
+        j = 0
+        while que:
+            size = len(que)
+            temp_sum = 0
+            for i in range(size):
+                curr = que.popleft()
+                temp_sum += curr.val
+                if curr.left:
+                    que.append(curr.left)
+                if curr.right:
+                    que.append(curr.right)
+
+            if max_sum < temp_sum:
+                max_sum = temp_sum
+                level = j + 1
+
+            j += 1
+
+        return level
+
+
 
 
