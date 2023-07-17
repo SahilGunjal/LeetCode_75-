@@ -1541,6 +1541,10 @@ class Solution:
         return self.findLCA(root, p, q, p_status, q_status, finalLCA)
 
 """
+----------------------------------  Binary-Tree-BFS  ----------------------------------
+"""
+
+"""
 Question 39:  199. Binary Tree Right Side View
 Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes 
 you can see ordered from top to bottom.
@@ -1610,6 +1614,32 @@ class Solution:
 
         return level
 
+"""
+----------------------------------  Binary-Search-Tree  ----------------------------------
+"""
+"""
+Question 41: 700. Search in a Binary Search Tree
 
+You are given the root of a binary search tree (BST) and an integer val.
+Find the node in the BST that the node's value equals val and return the subtree rooted with that node. If such a node 
+does not exist, return null.
+"""
 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def search(self,node,val):
+        if node is None or node.val == val :
+            return node
+        elif node.val < val:
+            return self.search(node.right,val)
+        else:
+            return self.search(node.left,val)
+
+    def searchBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:
+        return self.search(root,val)
 
