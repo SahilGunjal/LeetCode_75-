@@ -1449,4 +1449,93 @@ class Solution:
 
         return count[0]
 
+"""
+Question 37: 1372. Longest ZigZag Path in a Binary Tree
 
+You are given the root of a binary tree.
+
+A ZigZag path for a binary tree is defined as follow:
+
+Choose any node in the binary tree and a direction (right or left).
+If the current direction is right, move to the right child of the current node; otherwise, move to the left child.
+Change the direction from right to left or from left to right.
+Repeat the second and third steps until you can't move in the tree.
+Zigzag length is defined as the number of nodes visited - 1. (A single node has a length of 0).
+
+Return the longest ZigZag path contained in that tree.
+
+Approach: We can traverse tree but we have to think if node is coming from left and we are going right then we have to
+add +1 else its just the 1 and vice versa. So we have to maintain the current node. 
+Time Complexity: O(n) and space : O(1) + auxiliary stack space 
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+
+    def findTheMaxZigzag(self, node, comesFrom, maxLen, currLen):
+        if node is None:
+            return
+
+        maxLen[0] = max(maxLen[0], currLen)
+        if comesFrom == 'left':
+            self.findTheMaxZigzag(node.left, 'left', maxLen, 1)
+        else:
+            self.findTheMaxZigzag(node.left, 'left', maxLen, currLen + 1)
+
+        if comesFrom == 'right':
+            self.findTheMaxZigzag(node.right, 'right', maxLen, 1)
+        else:
+            self.findTheMaxZigzag(node.right, 'right', maxLen, currLen + 1)
+
+    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+        maxLen = [0]
+
+        self.findTheMaxZigzag(root, 'left', maxLen, 0)
+        self.findTheMaxZigzag(root, 'right', maxLen, 0)
+
+        return maxLen[0]
+
+
+"""
+Question 38: 236. Lowest Common Ancestor of a Binary Tree
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the
+lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findLCA(self, node, p, q, p_status, q_status, finalLCA):
+        if node is None or node is p or node is q:
+            return node
+
+        l1 = self.findLCA(node.left, p, q, p_status, q_status, finalLCA)
+        l2 = self.findLCA(node.right, p, q, p_status, q_status, finalLCA)
+
+        if l1 and l2:
+            return node
+
+        if l1:
+            return l1
+        elif l2:
+            return l2
+
+        return None
+
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        finalLCA = [None]
+        p_status = False
+        q_status = False
+        return self.findLCA(root, p, q, p_status, q_status, finalLCA)
