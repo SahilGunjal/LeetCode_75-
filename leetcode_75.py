@@ -1699,3 +1699,113 @@ class Solution:
         return dummyHead
 
 
+
+"""
+----------------------------------  Graph-DFS  ----------------------------------
+"""
+
+"""
+Question 43: 841. Keys and Rooms
+There are n rooms labeled from 0 to n - 1 and all the rooms are locked except for room 0. Your goal is to visit all the 
+rooms. However, you cannot enter a locked room without having its key.
+
+When you visit a room, you may find a set of distinct keys in it. Each key has a number on it, denoting which room it 
+unlocks, and you can take all of them with you to unlock the other rooms.
+
+Given an array rooms where rooms[i] is the set of keys that you can obtain if you visited room i, return true if you 
+can visit all the rooms, or false otherwise.
+
+Intuition: Starting with the '0' it must visit all the nodes means all the rooms and if it can visit all the rooms
+then only we can return true else false. Simple DFS but graph must not contain connected components if present then 
+return false.
+
+"""
+class Solution:
+    def dfs(self,rooms,visited,node):
+        visited.add(node)
+        for neighbors in rooms[node]:
+            if neighbors not in visited:
+                self.dfs(rooms,visited,neighbors)
+
+    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
+        visited = set()
+
+        self.dfs(rooms,visited,0)
+
+        if len(visited) == len(rooms):
+            return True
+        else:
+            return False
+
+
+"""
+Question 44: Number of provinces
+
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b, 
+and city b is connected directly with city c, then city a is connected indirectly with city c.
+
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly 
+connected, and isConnected[i][j] = 0 otherwise.
+
+Return the total number of provinces.
+"""
+
+# Solved Earlier
+class Solution:
+    def dfs(self, start, adj_list, visited_array):
+        visited_array[start] = 1
+        for neigh in adj_list[start]:
+            if visited_array[neigh] == 0:
+                self.dfs(neigh, adj_list, visited_array)
+
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+
+        total_vertices = len(isConnected)
+        adj_list = [[] for i in range(total_vertices)]
+        for i in range(total_vertices):
+            for j in range(len(isConnected[i])):
+                if i != j and isConnected[i][j] == 1:
+                    adj_list[i].append(j)
+                    adj_list[j].append(i)
+
+        visited_array = [0] * total_vertices
+
+        count = 0
+        for i in range(total_vertices):
+            if visited_array[i] == 0:
+                self.dfs(i, adj_list, visited_array)
+                count += 1
+
+        return count
+
+
+# Revision
+
+class Solution:
+    def dfs(self, i, adjList, visited):
+        visited.add(i)
+        for neighbor in adjList[i]:
+            if neighbor not in visited:
+                self.dfs(neighbor, adjList, visited)
+
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        visited = set()
+        # convert the matrix into adj list
+        adjList = [[] for i in range(len(isConnected))]
+        for i in range(len(isConnected)):
+            for j in range(len(isConnected)):
+                if isConnected[i][j] == 1:
+                    adjList[i].append(j)
+
+        count = 0
+
+        for i in range(len(adjList)):
+            if i not in visited:
+                count += 1
+                self.dfs(i, adjList, visited)
+
+        return count
+
+
