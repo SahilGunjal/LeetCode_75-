@@ -1643,3 +1643,59 @@ class Solution:
     def searchBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:
         return self.search(root,val)
 
+
+"""
+Question 42: Delete a Node in BST
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findrightMost(self, root):
+        if root.right is None:
+            return root
+
+        return self.findrightMost(root.right)
+
+    def helper(self, root):
+        if root.left is None:
+            return root.right
+        elif root.right is None:
+            return root.left
+        else:
+            rightSide = root.right
+            rightMost = self.findrightMost(root.left)
+
+            rightMost.right = rightSide
+
+        return root.left
+
+    def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+        if root is None:
+            return None
+
+        dummyHead = root
+        if root.val == key:
+            print('yes')
+            return self.helper(root)
+
+        while root:
+            if key < root.val:
+                if root.left is not None and root.left.val == key:
+                    root.left = self.helper(root.left)
+                else:
+                    root = root.left
+
+            else:
+                if root.right is not None and root.right.val == key:
+                    root.right = self.helper(root.right)
+                else:
+                    root = root.right
+
+        return dummyHead
+
+
