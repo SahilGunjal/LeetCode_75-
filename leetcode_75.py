@@ -1809,3 +1809,99 @@ class Solution:
         return count
 
 
+"""
+Question 45: 1466. Reorder Routes to Make All Paths Lead to the City Zero
+There are n cities numbered from 0 to n - 1 and n - 1 roads such that there is only one way to travel between 
+two different cities (this network form a tree). Last year, The ministry of transport decided to orient the roads in 
+one direction because they are too narrow.
+
+Roads are represented by connections where connections[i] = [ai, bi] represents a road from city ai to city bi.
+
+This year, there will be a big event in the capital (city 0), and many people want to travel to this city.
+
+Your task consists of reorienting some roads such that each city can visit the city 0. Return the minimum number of 
+edges changed.
+
+It's guaranteed that each city can reach city 0 after reorder.
+
+
+Intuition: make the graph bidirectional by adding -ve nodes in place of nodes for opposite path and apply dfs/bfs.
+"""
+
+class Solution:
+    def dfs(self, i, adjList, count, visited):
+        visited.add(i)
+        for neighbors in adjList[i]:
+            if abs(neighbors) not in visited:
+                if neighbors > 0:
+                    print(neighbors)
+                    count[0] += 1
+                self.dfs(abs(neighbors), adjList, count, visited)
+
+    def minReorder(self, n: int, connections: List[List[int]]) -> int:
+        adjList = [[] for i in range(n)]
+        count = [0]
+        visited = set()
+        for conn in connections:
+            adjList[conn[0]].append(conn[1])
+            adjList[conn[1]].append(-conn[0])
+
+        self.dfs(0, adjList, count, visited)
+
+        return count[0]
+
+"""
+Question 46: 399. Evaluate Division
+You are given an array of variable pairs equations and an array of real numbers values, 
+where equations[i] = [Ai, Bi] and values[i] represent the equation Ai / Bi = values[i]. Each Ai or Bi is a 
+string that represents a single variable.
+
+You are also given some queries, where queries[j] = [Cj, Dj] represents the jth query where you must find the answer 
+for Cj / Dj = ?.
+
+Return the answers to all queries. If a single answer cannot be determined, return -1.0.
+
+Note: The input is always valid. You may assume that evaluating the queries will not result in division by zero and that
+ there is no contradiction.
+ 
+Intuition: Make a graph then we just have start node and endNode just multiply them to get the answer if either is not
+present in the dictionary then return -1 or else apply bfs/dfs then multiply and return the value.
+If the start and end are not connected then return -1 as well. 
+"""
+
+class Solution:
+    def bfs(self, start, end, adjList):
+        if start not in adjList or end not in adjList:
+            return -1
+        visited = set()
+        que = deque()
+        visited.add(start)
+        que.append([start, 1])
+
+        while que:
+            node, weight = que.popleft()
+            if node == end:
+                return weight
+
+            for neighbor in adjList[node]:
+                if neighbor[0] not in visited:
+                    visited.add(neighbor[0])
+                    que.append([neighbor[0], neighbor[1] * weight])
+
+        return -1
+
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        adjList = collections.defaultdict(list)
+
+        for i, eq in enumerate(equations):
+            a, b = eq
+            adjList[a].append([b, values[i]])
+            adjList[b].append([a, 1 / values[i]])
+
+        print(adjList)
+        ans = []
+        for query in queries:
+            ans.append(self.bfs(query[0], query[1], adjList))
+
+        return ans
+
