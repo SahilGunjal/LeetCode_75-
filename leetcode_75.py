@@ -1905,3 +1905,192 @@ class Solution:
 
         return ans
 
+
+"""
+----------------------------------  Graph-BFS  ----------------------------------
+"""
+"""
+Question 47: 1926. Nearest Exit from Entrance in Maze
+You are given an m x n matrix maze (0-indexed) with empty cells (represented as '.') and walls (represented as '+'). 
+You are also given the entrance of the maze, where entrance = [entrancerow, entrancecol] denotes the row and column of 
+the cell you are initially standing at.
+
+In one step, you can move one cell up, down, left, or right. You cannot step into a cell with a wall, and you cannot 
+step outside the maze. Your goal is to find the nearest exit from the entrance. An exit is defined as an empty cell 
+that is at the border of the maze. The entrance does not count as an exit.
+
+Return the number of steps in the shortest path from the entrance to the nearest exit, or -1 if no such path exists.
+
+Intuition : Simple BFS problem just check its left right up and down and store the steps. Apply BFS
+"""
+
+class Solution:
+    def nearestExit(self, maze: List[List[str]], entrance: List[int]) -> int:
+        rows = len(maze)
+        cols = len(maze[0])
+
+        que = deque()
+        visited = [[0 for i in range(cols)] for i in range(rows)]
+        # print(visited)
+        que.append([entrance[0], entrance[1], 0])
+        visited[entrance[0]][entrance[1]] = 1
+        while que:
+            curr_i, curr_j, steps = que.popleft()
+
+            if (curr_i == 0 or curr_i == rows - 1 or curr_j == 0 or curr_j == cols - 1) and [curr_i,
+                                                                                             curr_j] != entrance:
+                return steps
+
+            if curr_i + 1 < rows:
+                if visited[curr_i + 1][curr_j] == 0:
+                    if maze[curr_i + 1][curr_j] == '.':
+                        que.append([curr_i + 1, curr_j, steps + 1])
+                        visited[curr_i + 1][curr_j] = 1
+
+            if curr_i - 1 >= 0:
+                if visited[curr_i - 1][curr_j] == 0:
+                    if maze[curr_i - 1][curr_j] == '.':
+                        que.append([curr_i - 1, curr_j, steps + 1])
+                        visited[curr_i - 1][curr_j] = 1
+
+            if curr_j + 1 < cols:
+                if visited[curr_i][curr_j + 1] == 0:
+                    if maze[curr_i][curr_j + 1] == '.':
+                        que.append([curr_i, curr_j + 1, steps + 1])
+                        visited[curr_i][curr_j + 1] = 1
+
+            if curr_j - 1 >= 0:
+                if visited[curr_i][curr_j - 1] == 0:
+                    if maze[curr_i][curr_j - 1] == '.':
+                        que.append([curr_i, curr_j - 1, steps + 1])
+                        visited[curr_i][curr_j - 1] = 1
+
+        return -1
+
+
+"""
+Question 48: 994. Rotting Oranges
+
+You are given an m x n grid where each cell can have one of three values:
+
+0 representing an empty cell,
+1 representing a fresh orange, or
+2 representing a rotten orange.
+Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
+
+Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return 
+-1.
+
+Intuition: 
+"""
+
+# Previously Solved
+
+from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        visited = [[0 for i in range(cols)] for j in range(rows)]
+
+        que = deque()
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == 2:
+                    que.append((i, j, 0))
+                    visited[i][j] = 1
+        t = 0
+        while que:
+            current_orange = que.popleft()
+            i = current_orange[0]
+            j = current_orange[1]
+            time = current_orange[2]
+            t = max(t, time)
+
+            if i - 1 >= 0:
+                if visited[i - 1][j] == 0:
+                    if grid[i - 1][j] == 1:
+                        grid[i - 1][j] = 2
+                        visited[i - 1][j] = 1
+                        que.append((i - 1, j, time + 1))
+
+            if i + 1 < rows:
+                if visited[i + 1][j] == 0:
+                    if grid[i + 1][j] == 1:
+                        grid[i + 1][j] = 2
+                        visited[i + 1][j] = 1
+                        que.append((i + 1, j, time + 1))
+
+            if j - 1 >= 0:
+                if visited[i][j - 1] == 0:
+                    if grid[i][j - 1] == 1:
+                        grid[i][j - 1] = 2
+                        visited[i][j - 1] = 1
+                        que.append((i, j - 1, time + 1))
+
+            if j + 1 < cols:
+                if visited[i][j + 1] == 0:
+                    if grid[i][j + 1] == 1:
+                        grid[i][j + 1] = 2
+                        visited[i][j + 1] = 1
+                        que.append((i, j + 1, time + 1))
+
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == 1:
+                    return -1
+
+        return t
+
+
+# Practice
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        que = deque()
+        visited = [[0 for i in range(cols)] for j in range(rows)]
+        time = 0
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == 2:
+                    visited[i][j] = 1
+                    que.append([i, j, time])
+
+        final_ans = 0
+        while que:
+            curr_i, curr_j, time = que.popleft()
+            final_ans = max(final_ans, time)
+            if curr_i + 1 < rows:
+                if visited[curr_i + 1][curr_j] == 0 and grid[curr_i + 1][curr_j] != 0:
+                    visited[curr_i + 1][curr_j] = 1
+                    que.append([curr_i + 1, curr_j, time + 1])
+
+            if curr_i - 1 >= 0:
+                if visited[curr_i - 1][curr_j] == 0 and grid[curr_i - 1][curr_j] != 0:
+                    visited[curr_i - 1][curr_j] = 1
+                    que.append([curr_i - 1, curr_j, time + 1])
+
+            if curr_j + 1 < cols:
+                if visited[curr_i][curr_j + 1] == 0 and grid[curr_i][curr_j + 1] != 0:
+                    visited[curr_i][curr_j + 1] = 1
+                    que.append([curr_i, curr_j + 1, time + 1])
+
+            if curr_j - 1 >= 0:
+                if visited[curr_i][curr_j - 1] == 0 and grid[curr_i][curr_j - 1] != 0:
+                    visited[curr_i][curr_j - 1] = 1
+                    que.append([curr_i, curr_j - 1, time + 1])
+
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] != 0 and visited[i][j] == 0:
+                    return -1
+
+        return final_ans
+
+
+"""
+----------------------------------  Heap / Priority Queue  ----------------------------------
+"""
