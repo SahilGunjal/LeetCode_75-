@@ -2094,3 +2094,113 @@ class Solution:
 """
 ----------------------------------  Heap / Priority Queue  ----------------------------------
 """
+
+"""
+Question 49: 215. Kth Largest Element in an Array
+
+Given an integer array nums and an integer k, return the kth largest element in the array.
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+Can you solve it without sorting?
+"""
+# Approach 1 : Use Min/MaxHeap
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heapq.heapify(nums)
+
+        for i in range(len(nums) - k):
+            heapq.heappop(nums)
+
+        return heapq.heappop(nums)
+
+# Approach 2 : K-select
+
+
+
+
+
+
+
+
+
+
+"""
+Question 50: 2336. Smallest Number in Infinite Set
+
+You have a set which contains all positive integers [1, 2, 3, 4, 5, ...].
+
+Implement the SmallestInfiniteSet class:
+
+SmallestInfiniteSet() Initializes the SmallestInfiniteSet object to contain all positive integers.
+int popSmallest() Removes and returns the smallest integer contained in the infinite set.
+void addBack(int num) Adds a positive integer num back into the infinite set, if it is not already in the infinite set.
+
+Approach: Go with the minimal value, if there are some elements in the heap then pop from the heap else go with min_val.
+"""
+class SmallestInfiniteSet:
+
+    def __init__(self):
+        self.heap = []
+        self.min_val = 1
+        self.my_set = dict()
+        heapq.heapify(self.heap)
+
+    def popSmallest(self) -> int:
+        if self.heap:
+            ans = heapq.heappop(self.heap)
+            del self.my_set[ans]
+        else:
+            ans = self.min_val
+            self.min_val += 1
+
+        return ans
+
+    def addBack(self, num: int) -> None:
+        if num == self.min_val - 1:
+            self.min_val -= 1
+        elif num in self.my_set or num >= self.min_val:
+            return
+        else:
+            heapq.heappush(self.heap, num)
+            self.my_set[num] = True
+
+# Your SmallestInfiniteSet object will be instantiated and called as such:
+# obj = SmallestInfiniteSet()
+# param_1 = obj.popSmallest()
+# obj.addBack(num)
+
+"""
+Question 51: 2542. Maximum Subsequence Score
+You are given two 0-indexed integer arrays nums1 and nums2 of equal length n and a positive integer k. You must choose 
+a subsequence of indices from nums1 of length k.
+
+For chosen indices i0, i1, ..., ik - 1, your score is defined as:
+
+The sum of the selected elements from nums1 multiplied with the minimum of the selected elements from nums2.
+It can defined simply as: (nums1[i0] + nums1[i1] +...+ nums1[ik - 1]) * min(nums2[i0] , nums2[i1], ... ,nums2[ik - 1]).
+Return the maximum possible score.
+
+A subsequence of indices of an array is a set that can be derived from the set {0, 1, ..., n-1} by deleting some or no 
+elements.
+
+
+Intuition: First we zip the elements together in reverse sorted order. then with the help of the heap we just removes
+the element with the smallest value. and calculate the sum and multiply it with smallest in the nums2.
+"""
+
+class Solution:
+    def maxScore(self, nums1: List[int], nums2: List[int], k: int) -> int:
+        heap = []
+        sum = 0
+        max_score = 0
+
+        for i,j in sorted(list(zip(nums1,nums2)),key=itemgetter(1),reverse=True):
+            sum += i
+            heappush(heap,i)
+
+            if len(heap) == k:
+                max_score = max(max_score,sum*j)
+                sum = sum - heappop(heap)
+
+
+        return max_score
