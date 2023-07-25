@@ -2204,3 +2204,174 @@ class Solution:
 
 
         return max_score
+
+"""
+Question 52: 2462. Total Cost to Hire K Workers
+You are given a 0-indexed integer array costs where costs[i] is the cost of hiring the ith worker.
+
+You are also given two integers k and candidates. We want to hire exactly k workers according to the following rules:
+
+You will run k sessions and hire exactly one worker in each session.
+In each hiring session, choose the worker with the lowest cost from either the first candidates workers or the last 
+candidates workers. Break the tie by the smallest index.
+For example, if costs = [3,2,7,7,1,2] and candidates = 2, then in the first hiring session, we will choose the 4th 
+worker because they have the lowest cost [3,2,7,7,1,2].
+In the second hiring session, we will choose 1st worker because they have the same lowest cost as 4th worker but they 
+have the smallest index [3,2,7,7,2]. Please note that the indexing may be changed in the process.
+If there are fewer than candidates workers remaining, choose the worker with the lowest cost among them. Break the tie 
+by the smallest index.
+A worker can only be chosen once.
+Return the total cost to hire exactly k workers.
+"""
+# Approach is nice but the time complexity is too much. k*O(2nlogn) ~ almost .... Failing some test cases.
+class Solution:
+    def totalCost(self, costs: List[int], k: int, candidates: int) -> int:
+
+        heap = []
+        for i, cost in enumerate(costs):
+            heap.append((cost, i))
+
+        heap_size = len(heap)
+        # print(heap_size)
+        # print(sorted(heap))
+        # print('-----')
+        heapq.heapify(heap)
+        # print(heap)
+        total_cost = 0
+        l = 0
+        r = 0
+        for i in range(k):
+            if len(heap) < candidates:
+                # print('In')
+                total_cost += heapq.heappop(heap)[0]
+            else:
+                temp_cost, ind = heap[0]
+                temp = []
+
+                # print(heap[0])
+                # print('left:  '+str(candidates+l))
+                # print('right:  '+str(heap_size-candidates -r))
+
+                while (ind >= (candidates + l)) and (ind < (heap_size - candidates - r)):
+                    # print(temp_cost,ind)
+                    temp.append((heapq.heappop(heap)))
+                    temp_cost, ind = heap[0]
+
+                # print(heap)
+                heapq.heappop(heap)
+
+                for j in range(len(temp)):
+                    heapq.heappush(heap, temp[j])
+
+                if ind < candidates + l:
+                    l += 1
+                else:
+                    r += 1
+
+                # print(temp_cost,end=',')
+                # print(ind)
+                total_cost += temp_cost
+
+        return total_cost
+
+
+"""
+----------------------------------  Binary_Search  ----------------------------------
+"""
+
+"""
+Question : 53 - 374. Guess Number Higher or Lower
+We are playing the Guess Game. The game is as follows:
+
+I pick a number from 1 to n. You have to guess which number I picked.
+
+Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.
+
+You call a pre-defined API int guess(int num), which returns three possible results:
+
+-1: Your guess is higher than the number I picked (i.e. num > pick).
+1: Your guess is lower than the number I picked (i.e. num < pick).
+0: your guess is equal to the number I picked (i.e. num == pick).
+Return the number that I picked.
+
+Approach: Simple Binary Search
+"""
+
+
+# The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if num is higher than the picked number
+#          1 if num is lower than the picked number
+#          otherwise return 0
+# def guess(num: int) -> int:
+
+class Solution:
+    def binarySearch(self,l,r):
+        if r>=l:
+            mid = l + (r-l) //2
+
+            if guess(mid)== 0:
+                return mid
+            elif guess(mid) == -1:
+                return self.binarySearch(l,mid-1)
+            else:
+                return self.binarySearch(mid+1,r)
+
+
+    def guessNumber(self, n: int) -> int:
+        return self.binarySearch(0,n)
+
+
+"""
+Question 54: 2300. Successful Pairs of Spells and Potions
+You are given two positive integer arrays spells and potions, of length n and m respectively, where spells[i] represents
+ the strength of the ith spell and potions[j] represents the strength of the jth potion.
+
+You are also given an integer success. A spell and potion pair is considered successful if the product of their 
+strengths is at least success.
+
+Return an integer array pairs of length n where pairs[i] is the number of potions that will form a successful pair with 
+the ith spell.
+
+Intuition: Sort the potions as we know if we found one number in sorted for which success pair >= success then all the
+elements after that will satisfy that condition automatically. we can use binary search for that. 
+"""
+class Solution:
+    def bSearch(self, l, r, sorted_potions, spell, success, ind_arr):
+
+        if r >= l:
+            mid = l + (r - l) // 2
+
+            if sorted_potions[mid] * spell >= success:
+                ind_arr[0] = mid
+                self.bSearch(l, mid - 1, sorted_potions, spell, success, ind_arr)
+
+            else:
+                self.bSearch(mid + 1, r, sorted_potions, spell, success, ind_arr)
+
+    def successfulPairs(self, spells: List[int], potions: List[int], success: int) -> List[int]:
+
+        sorted_potions = sorted(potions)
+        ans = []
+        ind_arr = [-1]
+        for spell in spells:
+            self.bSearch(0, len(potions) - 1, sorted_potions, spell, success, ind_arr)
+            print(ind_arr)
+            if ind_arr[0] == -1:
+                ans.append(0)
+            else:
+                ans.append(len(potions) - ind_arr[0])
+
+            ind_arr[0] = -1
+
+        return ans
+
+
+
+
+
+
+
+
+
+
