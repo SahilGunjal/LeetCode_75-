@@ -2366,12 +2366,98 @@ class Solution:
 
         return ans
 
+"""
+Leetcode: 55 - 162. Find Peak Element
+A peak element is an element that is strictly greater than its neighbors.
+
+Given a 0-indexed integer array nums, find a peak element, and return its index. If the array contains multiple peaks,
+ return the index to any of the peaks.
+
+You may imagine that nums[-1] = nums[n] = -∞. In other words, an element is always considered to be strictly greater 
+than a neighbor that is outside the array.
+
+You must write an algorithm that runs in O(log n) time.
+
+Intuition: Just look for the condition nums[-1] = nums[n] = -∞ and add 2 initial cases and use binary search from 
+index-1 to index- len(nums)-2. Simple Binary Search 
+"""
+
+class Solution:
+    def bSearch(self, l, r, nums):
+        if r >= l:
+            mid = l + (r - l) // 2
+
+            if nums[mid - 1] < nums[mid] and nums[mid + 1] < nums[mid]:
+                return mid
+
+            elif nums[mid] < nums[mid + 1]:
+                return self.bSearch(mid + 1, r, nums)
+
+            else:
+                return self.bSearch(l, mid - 1, nums)
+
+    def findPeakElement(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return 0
+
+        elif nums[0] > nums[1]:
+            return 0
+
+        elif nums[len(nums) - 1] > nums[len(nums) - 2]:
+            return len(nums) - 1
+
+        return self.bSearch(1, len(nums) - 2, nums)
+
+"""
+Question- 56: 875. Koko Eating Bananas
+Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and 
+will come back in h hours.
+Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas 
+from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas 
+during this hour.
+Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+Return the minimum integer k such that she can eat all the bananas within h hours.
+
+Intuition: This problem is very very similar to leetcode_1870. Minimum Speed to Arrive on Time (Check in my 
+leetcode_daily repository). Just there we have given the speed as 10^7 as upper limit and lower limit as 1.
+Here monkey can eat max(piles) bananas or can eat 1 so limits are from 1 to max(piles). Use simple binary search in 
+order to get an ans and check the time for each mid_speed value. (How much time it will take to finish all the bananas).
+
+TC - O(len(piles)*log(max(piles)))
+SC - auxiliary stack space for recursive binary - O(log(max(piles)))
+"""
+import math
+class Solution:
+    def calculate_time(self, speed, piles):
+        t = 0
+        for i in range(len(piles)):
+            t = t + math.ceil(piles[i] / speed)
+
+        return t
+
+    def bSearch(self, l, r, h, piles):
+        min_speed = 0
+        while r >= l:
+            mid_speed = l + (r - l) // 2
+
+            if self.calculate_time(mid_speed, piles) <= h:
+                min_speed = mid_speed
+                r = mid_speed - 1
+            else:
+                l = mid_speed + 1
+
+        return min_speed
+
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+
+        l = 1
+        r = max(piles)
+
+        return self.bSearch(l, r, h, piles)
 
 
-
-
-
-
-
+"""
+----------------------------------  Backtracking  ----------------------------------
+"""
 
 
