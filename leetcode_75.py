@@ -2455,6 +2455,88 @@ class Solution:
 
         return self.bSearch(l, r, h, piles)
 
+"""
+----------------------------------  Recursion Practice  ----------------------------------
+"""
+
+"""
+Leetcode:39. Combination Sum
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of
+ candidates where the chosen numbers sum to target. You may return the combinations in any order.
+
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the 
+frequency
+ of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of unique combinations that sum up to target is less than 150 
+combinations for the given input.
+
+Intuition: if ind is <target then keep the index same else increase the index and do it recursive. As we can take 
+same elements multiple times.
+"""
+
+class Solution:
+    def findCombinations(self, ind, n, target, ans, temp, candidates):
+        if ind >= n:
+            if target == 0:
+                ans.append(temp.copy())
+            return
+
+        if candidates[ind] <= target:
+            temp.append(candidates[ind])
+            self.findCombinations(ind, len(candidates), target - candidates[ind], ans, temp, candidates)
+            temp.pop()
+
+        self.findCombinations(ind + 1, len(candidates), target, ans, temp, candidates)
+
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+
+        ans = []
+        self.findCombinations(0, len(candidates), target, ans, [], candidates)
+
+        return ans
+
+
+"""
+Leetcode: 40. Combination Sum II
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in 
+candidates where the candidate numbers sum to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note: The solution set must not contain duplicate combinations.
+
+Intuition: Here we don't want to take same elements at same level, as that can lead to same combination. So use for
+loop and condtions to break it out of the loop. In this case it's for loop so we don't explicitely need to mention the
+for not take condition. # Important
+"""
+
+class Solution:
+
+    def findCombinations(self, ind, candidates, target, ans, temp):
+        if target == 0:
+            ans.append(temp.copy())
+            return
+
+        for i in range(ind, len(candidates)):
+            if i > ind and candidates[i] == candidates[i - 1]:
+                continue
+            if candidates[i] > target:
+                break
+
+            temp.append(candidates[i])
+            self.findCombinations(i + 1, candidates, target - candidates[i], ans, temp)
+            temp.pop()
+
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        ans = []
+
+        candidates.sort()
+        self.findCombinations(0, candidates, target, ans, [])
+
+        return ans
+
+
 
 """
 ----------------------------------  Backtracking  ----------------------------------
