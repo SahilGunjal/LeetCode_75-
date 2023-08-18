@@ -2543,3 +2543,194 @@ class Solution:
 """
 
 
+
+"""
+----------------------------------  DP-1D  ----------------------------------
+"""
+
+"""
+Question 58: 1137. N-th Tribonacci Number
+The Tribonacci sequence Tn is defined as follows: 
+
+T0 = 0, T1 = 1, T2 = 1, and Tn+3 = Tn + Tn+1 + Tn+2 for n >= 0.
+
+Given n, return the value of Tn.
+
+Intuition: As per the fibonacci it's tribonacci, it's recursive solution is easy just like fibonacci. But the time 
+complexity  is almost 0(2^n) and space is almost height of the tree.
+
+But we can Memoize the solution using dict by storing the ans which we got in the process.
+"""
+
+class Solution:
+    def tribonacci(self, n: int) -> int:
+
+        dp = dict()
+
+        def recursive(n):
+            if n <= 1:
+                return n
+
+            if n == 2:
+                return 1
+
+            if n in dp:
+                return dp[n]
+
+            dp[n] = recursive(n - 1) + recursive(n - 2) + recursive(n - 3)
+
+            return dp[n]
+
+        return recursive(n)
+
+
+# Dp array solution : simply add the previous and store it in arr as we go ahead.
+
+class Solution:
+    def tribonacci(self, n: int) -> int:
+        arr = [0, 1, 1]
+
+        for i in range(3, n + 1):
+            arr.append(arr[i - 1] + arr[i - 2] + arr[i - 3])
+
+        return arr[n]
+
+
+"""
+Question 59: 746. Min Cost Climbing Stairs
+You are given an integer array cost where cost[i] is the cost of ith step on a staircase. Once you pay the cost, 
+you can either climb one or two steps.
+
+You can either start from the step with index 0, or the step with index 1.
+
+Return the minimum cost to reach the top of the floor.
+
+
+Intuition: We want min steps so we can either reach nth position from n-1 or n-2 and we want min of this so we can 
+call recursive and add the cost. and add dp to it. 
+Recursive + memoization
+"""
+
+
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+
+        dp = dict()
+
+        def recursive(i):
+            if i <= 1:
+                return cost[i]
+
+            if i in dp:
+                return dp[i]
+
+            dp[i] = cost[i] + min(recursive(i - 1), recursive(i - 2))
+            return dp[i]
+
+        n = len(cost)
+
+        return min(recursive(n - 1), recursive(n - 2))
+
+
+"""
+Question 60: 198. House Robber
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, 
+the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and 
+it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can 
+rob tonight without alerting the police.
+
+Intuition: It is very similar to take all subsequence kind of but here also we have to take pick and non pick 
+only thing is that here we cannot take adj neighbors. Below is the space optimized code, we can also solve it using 
+memoization but this is best solution.
+Tc - O(n)
+SC - O(1)
+"""
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        prev = nums[0]
+        prev_2 = 0
+        n = len(nums)
+
+        for i in range(1, n):
+
+            take = nums[i]
+            if i > 1:
+                take += prev_2
+
+            nontake = 0 + prev
+
+            curr = max(take, nontake)
+
+            prev_2 = prev
+            prev = curr
+
+        return prev
+
+"""
+790. Domino and Tromino Tiling
+You have two types of tiles: a 2 x 1 domino shape and a tromino shape. You may rotate these shapes.
+Given an integer n, return the number of ways to tile an 2 x n board. Since the answer may be very large, return it 
+modulo 109 + 7.
+
+In a tiling, every square must be covered by a tile. Two tilings are different if and only if there are two
+4-directionally adjacent cells on the board such that exactly one of the tilings has both squares occupied by a tile.
+
+In such questions first find first 3 4 5 cases and then make generalization.
+Tc - O(n)
+Sc - O(n)
+"""
+
+class Solution:
+    def numTilings(self, n: int) -> int:
+        md = 1e9 + 7
+        if n <= 2:
+            return n
+
+        if n == 3:
+            return 5
+
+        dp = [0] * (n + 1)
+        dp[0] = 0
+        dp[1] = 1
+        dp[2] = 2
+        dp[3] = 5
+
+        for i in range(4, n + 1):
+            dp[i] = 2 * dp[i - 1] + dp[i - 3]
+            dp[i] = int(dp[i] % md)
+
+        return dp[n]
+
+
+"""
+Below is space optimized code:
+Tc - O(n)
+Sc - O(1)
+"""
+
+class Solution:
+    def numTilings(self, n: int) -> int:
+        md = 1e9 + 7
+        if n <= 2:
+            return n
+
+        if n == 3:
+            return 5
+
+        dp = [0] * (n + 1)
+        prev_3 = 1
+        prev_2 = 2
+        prev = 5
+
+        for i in range(4, n + 1):
+            dp[i] = 2 * prev + prev_3
+            dp[i] = int(dp[i] % md)
+
+            prev_3 = prev_2
+            prev_2 = prev
+            prev = dp[i]
+
+        return dp[n]
